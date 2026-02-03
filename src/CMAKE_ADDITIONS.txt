@@ -1,0 +1,94 @@
+﻿# CMakeLists.txt 新增部分
+# 这个文件显示需要添加到 src/CMakeLists.txt 中的内容
+
+# ============================================
+# 添加到源文件列表
+# ============================================
+
+# Octave引擎源文件
+set(OCTAVE_ENGINE_SOURCES
+    octave_engine/OctaveEngine.h
+    octave_engine/OctaveEngine.cpp
+    octave_engine/OctaveWorker.h
+    octave_engine/OctaveWorker.cpp
+    octave_engine/OctaveDataBridge.h
+    octave_engine/OctaveDataBridge.cpp
+)
+
+# PDF导出源文件
+set(PDF_EXPORT_SOURCES
+    pdf_export/FluReportBuilder.h
+    pdf_export/FluReportBuilder.cpp
+)
+
+# 算法适配层源文件
+set(ALGORITHM_SOURCES
+    algorithms/AlgorithmAdapter.h
+    algorithms/AlgorithmAdapter.cpp
+)
+
+# 将新源文件添加到全局源文件列表
+list(APPEND CPP_FILES 
+    ${OCTAVE_ENGINE_SOURCES}
+    ${PDF_EXPORT_SOURCES}
+    ${ALGORITHM_SOURCES}
+)
+
+# ============================================
+# 添加到QML模块资源
+# ============================================
+
+# 在 qt_add_qml_module(...) 中添加：
+# RESOURCES
+#     algorithms/bridge_scripts/run_power_flow.m
+#     algorithms/bridge_scripts/run_fault_analysis.m
+
+# ============================================
+# 依赖项配置
+# ============================================
+
+# 可选：Octave支持
+option(USE_OCTAVE "Build with Octave support" ON)
+
+if(USE_OCTAVE)
+    # 自动查找Octave
+    # 可能需要自定义查找脚本
+    
+    # Windows上的Octave默认路径
+    if(WIN32)
+        # 通常在 C:/Octave/ 下
+        set(OCTAVE_HINTS "C:/Octave" "C:/Program Files/Octave")
+    endif()
+    
+    # 添加Octave包含目录（如果使用Octave C++ API）
+    # find_package(Octave REQUIRED)
+    # target_include_directories(${PROJECT_NAME} PRIVATE ${OCTAVE_INCLUDE_DIRS})
+    # target_link_libraries(${PROJECT_NAME} PRIVATE ${OCTAVE_LIBRARIES})
+endif()
+
+# ============================================
+# 必需的Qt模块
+# ============================================
+
+# 确保在 find_package() 中包含以下模块：
+# find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS 
+#     Core
+#     Gui
+#     Quick
+#     Qml
+#     PrintSupport      # 用于PDF支持
+# )
+
+# 链接PrintSupport库
+# target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
+
+# ============================================
+# 包含目录
+# ============================================
+
+# 添加以下包含目录（如果需要）
+# target_include_directories(${PROJECT_NAME} PRIVATE
+#     ${CMAKE_CURRENT_SOURCE_DIR}/octave_engine
+#     ${CMAKE_CURRENT_SOURCE_DIR}/pdf_export
+#     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms
+# )

@@ -1,0 +1,117 @@
+﻿{
+  "version": "1.0.0",
+  "project": "FluentUI with MATLAB/Octave Integration",
+  
+  "octave": {
+    "enabled": true,
+    "executable": "octave",
+    "scriptPath": "./src/algorithms/bridge_scripts",
+    "timeout": 30000,
+    "defaultAlgorithm": "power_flow"
+  },
+  
+  "pdf_export": {
+    "enabled": true,
+    "font_family": "SimSun",
+    "font_size": 11,
+    "page_width": 210,
+    "page_height": 297,
+    "margins": {
+      "left": 20,
+      "right": 20,
+      "top": 20,
+      "bottom": 20
+    }
+  },
+  
+  "algorithms": {
+    "power_flow": {
+      "name": "潮流计算",
+      "description": "电力系统潮流分析",
+      "script": "run_power_flow",
+      "inputs": {
+        "bus_data": {
+          "type": "matrix",
+          "columns": 7,
+          "required": true
+        },
+        "line_data": {
+          "type": "matrix",
+          "columns": 5,
+          "required": true
+        },
+        "options": {
+          "type": "struct",
+          "required": false,
+          "defaults": {
+            "max_iterations": 100,
+            "tolerance": 1e-6
+          }
+        }
+      },
+      "outputs": {
+        "voltage": "节点电压",
+        "power_flow": "线路功率",
+        "losses": "总网损",
+        "converged": "收敛标志",
+        "iterations": "迭代次数"
+      }
+    },
+    
+    "fault_analysis": {
+      "name": "故障分析",
+      "description": "系统故障分析",
+      "script": "run_fault_analysis",
+      "inputs": {
+        "bus_data": {
+          "type": "matrix",
+          "required": true
+        },
+        "line_data": {
+          "type": "matrix",
+          "required": true
+        },
+        "fault_bus": {
+          "type": "int",
+          "required": true
+        }
+      },
+      "outputs": {
+        "fault_voltage": "故障点电压",
+        "fault_current": "故障电流",
+        "fault_power": "故障功率"
+      }
+    }
+  },
+  
+  "reporting": {
+    "templates": {
+      "simple": {
+        "name": "简单报告",
+        "sections": ["封面", "摘要", "数据表格"]
+      },
+      "detailed": {
+        "name": "详细报告",
+        "sections": ["封面", "目录", "背景", "方法", "结果", "分析", "结论", "附录"]
+      },
+      "executive": {
+        "name": "管理层报告",
+        "sections": ["封面", "执行摘要", "关键指标", "建议"]
+      }
+    }
+  },
+  
+  "data_formats": {
+    "input": "JSON",
+    "output": "JSON",
+    "intermediate": "MAT"
+  },
+  
+  "paths": {
+    "algorithms": "./src/algorithms",
+    "bridge_scripts": "./src/algorithms/bridge_scripts",
+    "test_data": "./tests/test_data",
+    "output": "./output",
+    "logs": "./logs"
+  }
+}

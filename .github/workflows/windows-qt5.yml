@@ -43,6 +43,11 @@ jobs:
           arch: ${{ matrix.qt_arch }}
           cache: ${{steps.cache-qt.outputs.cache-hit}}
           
+      - name: Install Octave
+        shell: pwsh
+        run: |
+          choco install octave -y --no-progress
+          
       - name: msvc-build
         id: build
         shell: cmd
@@ -56,6 +61,12 @@ jobs:
           echo winSdkVer=%WindowsSdkVersion% >> %GITHUB_ENV%
           echo vcToolsInstallDir=%VCToolsInstallDir% >> %GITHUB_ENV%
           echo vcToolsRedistDir=%VCToolsRedistDir% >> %GITHUB_ENV%
+          
+      - name: Run integration tests
+        shell: cmd
+        run: |
+          cd build
+          ctest --output-on-failure
           
       - name: package
         id: package      
