@@ -169,6 +169,14 @@
         <file>qml/page/T_TreeView.qml</file>
         <file>qml/page/T_Typography.qml</file>
         <file>qml/page/T_Watermark.qml</file>
+        <file>qml/page/T_UI_Overview.qml</file>
+        <file>qml/page/T_UI_AssetManagement.qml</file>
+        <file>qml/page/T_UI_Module1_RegularCheck.qml</file>
+        <file>qml/page/T_UI_Module2_VibNoise.qml</file>
+        <file>qml/page/T_UI_Module3_MultiParam.qml</file>
+        <file>qml/page/T_UI_ReportExport.qml</file>
+        <file>qml/component/UI_Card.qml</file>
+        <file>qml/component/UI_InputBlock.qml</file>
         <file>qml/window/AboutWindow.qml</file>
         <file>qml/window/HotloadWindow.qml</file>
         <file>qml/window/LoginWindow.qml</file>

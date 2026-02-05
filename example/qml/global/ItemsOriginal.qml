@@ -498,6 +498,48 @@ FluObject{
             url: "qrc:/example/qml/page/T_Network.qml"
             onTap: { navigationView.push(url) }
         }
+    
+    FluPaneItemExpander{
+        title: qsTr("Auto Analysis")
+        icon: FluentIcons.LineChart
+        FluPaneItem{
+            title: qsTr("Overview")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_Overview.qml"
+            onTap: { navigationView.push(url) }
+        }
+        FluPaneItem{
+            title: qsTr("Asset Management")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_AssetManagement.qml"
+            onTap: { navigationView.push(url) }
+        }
+        FluPaneItem{
+            title: qsTr("Regular Check")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_Module1_RegularCheck.qml"
+            onTap: { navigationView.push(url) }
+        }
+        FluPaneItem{
+            title: qsTr("Vib/Noise Processing")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_Module2_VibNoise.qml"
+            onTap: { navigationView.push(url) }
+        }
+        FluPaneItem{
+            title: qsTr("Multi-parameter Fusion")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_Module3_MultiParam.qml"
+            onTap: { navigationView.push(url) }
+        }
+        FluPaneItem{
+            title: qsTr("Report Export")
+            menuDelegate: paneItemMenu
+            url: "qrc:/example/qml/page/T_UI_ReportExport.qml"
+            onTap: { navigationView.push(url) }
+        }
+    }
+
         FluPaneItem{
             id: item_other
             title: qsTr("Remote Loader")
