@@ -223,6 +223,7 @@ endif()
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/qmlcustomplot
     ${CMAKE_CURRENT_SOURCE_DIR}/pdf_export
+    ${CMAKE_CURRENT_SOURCE_DIR}/octave_engine
 )
 
 if ((${QT_VERSION_MAJOR} LESS_EQUAL 6) AND (CMAKE_BUILD_TYPE MATCHES "Release"))
