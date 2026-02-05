@@ -108,9 +108,9 @@ bool FluReportBuilder::generate(const QString &filePath)
         pdfWriter.setMargins({_marginLeft, _marginTop, _marginRight, _marginBottom},
                             QPagedPaintDevice::Millimeter);
 #else
-        pdfWriter.setPageSize(QPageSize(QSizeF(_pageWidth, _pageHeight)));
-        pdfWriter.setPageMargins(QMarginsF(_marginLeft, _marginTop, _marginRight, _marginBottom),
-                                QPageSize::Millimeter);
+    pdfWriter.setPageSize(QPageSize(QSizeF(_pageWidth, _pageHeight), QPageSize::Millimeter));
+    pdfWriter.setPageMargins(QMarginsF(_marginLeft, _marginTop, _marginRight, _marginBottom),
+                QPageLayout::Millimeter);
 #endif
         pdfWriter.setTitle(_title);
         pdfWriter.setCreator(QStringLiteral("FluentUI PDF Export"));
@@ -307,8 +307,7 @@ void FluReportBuilder::renderTable(QPainter &painter, const ContentItem &item, i
     
     // 绘制表头
     painter.setFont(headerFont);
-    QBrush headerBrush(QColor(_colorHeaderBg));
-    painter.fillRect(_marginLeft, yPos, tableWidth, 25, headerBrush);
+    painter.fillRect(_marginLeft, yPos, tableWidth, 25, QColor(_colorHeaderBg));
     
     QStringList headerList;
     for (const QVariant &h : item.headers) {
