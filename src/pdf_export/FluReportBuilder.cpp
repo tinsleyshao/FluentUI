@@ -1,5 +1,6 @@
 ﻿#include "FluReportBuilder.h"
 #include <QPdfWriter>
+#include <QPageSize>
 #include <QPainter>
 #include <QFont>
 #include <QDebug>
@@ -102,9 +103,15 @@ bool FluReportBuilder::generate(const QString &filePath)
         QPdfWriter pdfWriter(filePath);
         
         // 设置PDF纸张大小和边距 (单位: mm)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         pdfWriter.setPageSize(QPageSize(QSizeF(_pageWidth, _pageHeight), QPageSize::Millimeter));
         pdfWriter.setMargins({_marginLeft, _marginTop, _marginRight, _marginBottom},
                             QPagedPaintDevice::Millimeter);
+#else
+        pdfWriter.setPageSize(QPageSize(QSizeF(_pageWidth, _pageHeight)));
+        pdfWriter.setPageMargins(QMarginsF(_marginLeft, _marginTop, _marginRight, _marginBottom),
+                                QPageSize::Millimeter);
+#endif
         pdfWriter.setTitle(_title);
         pdfWriter.setCreator(QStringLiteral("FluentUI PDF Export"));
         

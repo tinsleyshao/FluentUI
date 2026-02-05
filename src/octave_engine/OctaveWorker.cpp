@@ -14,8 +14,13 @@ OctaveWorker::OctaveWorker(QObject *parent)
     
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &OctaveWorker::onProcessFinished);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(m_process, QOverload<QProcess::ProcessError>::of(&QProcess::error),
             this, &OctaveWorker::onProcessError);
+#else
+    connect(m_process, QOverload<QProcess::ProcessError>::of(&QProcess::errorOccurred),
+            this, &OctaveWorker::onProcessError);
+#endif
     connect(m_process, &QProcess::readyReadStandardOutput,
             this, &OctaveWorker::onReadyReadStandardOutput);
     connect(m_process, &QProcess::readyReadStandardError,

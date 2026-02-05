@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QtQml/qqml.h>
 #include <memory>
 
 class OctaveWorker;
@@ -23,6 +24,11 @@ class OctaveEngine : public QObject {
 public:
     // 获取单例实例
     static OctaveEngine* getInstance();
+    
+    // Qt6 QML 注册工厂方法
+    static OctaveEngine* create(QQmlEngine *, QJSEngine *) {
+        return getInstance();
+    }
     
     /**
      * @brief 初始化Octave环境

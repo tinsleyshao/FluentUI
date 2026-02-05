@@ -1,20 +1,20 @@
 name: Ubuntu
 on: 
   workflow_dispatch:
-  push:
-    paths:
-      - '*.txt'
-      - 'src/**'
-      - 'example/**'
-      - 'scripts/**'
-      - '.github/workflows/ubuntu.yml'
-  pull_request:
-    paths:
-      - '*.txt'
-      - 'src/**'
-      - 'example/**'
-      - 'scripts/**'
-      - '.github/workflows/ubuntu.yml'
+  # push:
+  #   paths:
+  #     - '*.txt'
+  #     - 'src/**'
+  #     - 'example/**'
+  #     - 'scripts/**'
+  #     - '.github/workflows/ubuntu.yml'
+  # pull_request:
+  #   paths:
+  #     - '*.txt'
+  #     - 'src/**'
+  #     - 'example/**'
+  #     - 'scripts/**'
+  #     - '.github/workflows/ubuntu.yml'
       
 jobs:
   build:

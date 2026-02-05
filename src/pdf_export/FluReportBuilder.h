@@ -4,6 +4,8 @@
 #include <QVariantList>
 #include <QVariantMap>
 #include <QObject>
+#include <QtQml/qqml.h>
+#include "stdafx.h"
 #include <memory>
 
 class QPdfWriter;
