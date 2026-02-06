@@ -88,7 +88,7 @@ void PowerSystemAnalyzer::generateReport(const QString &title,
         return;
     }
     
-    m_reportBuilder->setTitle(title);
+    m_reportBuilder->title(title);
     m_reportBuilder->addCoverPage(
         title,
         "分析评估结果",
