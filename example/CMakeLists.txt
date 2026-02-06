@@ -112,6 +112,9 @@ file(COPY ${CMAKE_SOURCE_DIR}/src/ DESTINATION ${APPLICATION_DIR_PATH}/source/)
 #导入component头文件,不然通过QML_NAMED_ELEMENT生成的c++类会找不到头文件报错
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/component
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/octave_engine
+        ${CMAKE_SOURCE_DIR}/src/pdf_export
 )
 
 #如果是静态库则需要手动注册插件，导入FluentUI.h头文件
