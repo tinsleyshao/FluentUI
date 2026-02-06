@@ -179,6 +179,8 @@ target_compile_definitions(${PROJECT_NAME}
         PRIVATE
         #导入qrcode配置文件
         HAVE_CONFIG_H
+        #DLL export macro
+        ${PROJECT_NAME}_EXPORTS
 )
 
 #去掉mingw生成的动态库libxxx前缀lib，不去掉前缀会导致 module "FluentUI" plugin "fluentuiplugin" not found

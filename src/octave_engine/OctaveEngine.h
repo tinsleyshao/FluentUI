@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QtQml/qqml.h>
+#include "stdafx.h"
 #include <memory>
 
 class OctaveWorker;
@@ -16,7 +17,7 @@ class QThread;
  * @brief Octave集成引擎 - 负责调用Octave脚本执行算法
  * 提供同步和异步两种执行方式
  */
-class OctaveEngine : public QObject {
+class FLUENTUI_EXPORT OctaveEngine : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(OctaveEngine)
     QML_SINGLETON

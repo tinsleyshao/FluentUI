@@ -14,7 +14,7 @@ class QPainter;
 /**
  * @brief PDF报告生成器 - 支持生成包含表格、图表、文本的多页PDF报告
  */
-class FluReportBuilder : public QObject {
+class FLUENTUI_EXPORT FluReportBuilder : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(FluReportBuilder)
 

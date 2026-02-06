@@ -1,5 +1,19 @@
 #pragma once
 
+// DLL Export/Import macro for Windows
+#ifdef _MSC_VER
+    #ifdef FLUENTUI_BUILD_STATIC_LIB
+        #define FLUENTUI_EXPORT
+    #else
+        #if defined(fluentuiplugin_EXPORTS) || defined(fluentui_EXPORTS)
+            #define FLUENTUI_EXPORT __declspec(dllexport)
+        #else
+            #define FLUENTUI_EXPORT __declspec(dllimport)
+        #endif
+    #endif
+#else
+    #define FLUENTUI_EXPORT
+#endif
 
 #define Q_PROPERTY_AUTO_P(TYPE, M)                                                                 \
     Q_PROPERTY(TYPE M MEMBER _##M NOTIFY M##Changed)                                               \
