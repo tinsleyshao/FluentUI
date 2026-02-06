@@ -87,7 +87,8 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
     
     // 添加QML导入路径以找到FluentUI插件
-    engine.addImportPath(QCoreApplication::applicationDirPath() + "/../qml");
+    // 从 bin/Release 到 qml 需要往上两级：../../qml
+    engine.addImportPath(QCoreApplication::applicationDirPath() + "/../../qml");
     
     TranslateHelper::getInstance()->init(&engine);
     engine.rootContext()->setContextProperty("AppInfo", AppInfo::getInstance());
