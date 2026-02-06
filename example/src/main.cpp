@@ -85,6 +85,10 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<DataGenerator>(uri, major, minor, "DataGenerator");
 
     QQmlApplicationEngine engine;
+    
+    // 添加QML导入路径以找到FluentUI插件
+    engine.addImportPath(QCoreApplication::applicationDirPath() + "/../qml");
+    
     TranslateHelper::getInstance()->init(&engine);
     engine.rootContext()->setContextProperty("AppInfo", AppInfo::getInstance());
     engine.rootContext()->setContextProperty("SettingsHelper", SettingsHelper::getInstance());
