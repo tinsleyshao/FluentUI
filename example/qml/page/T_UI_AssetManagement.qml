@@ -8,31 +8,46 @@ FluScrollablePage{
     launchMode: FluPageType.SingleTask
     header: FluText{ text: qsTr("Asset Management") ; font: FluTextStyle.Title }
 
-    property var assetRows: [
-        { _key: "1", field: qsTr("变压器型号"), value: "" },
-        { _key: "2", field: qsTr("容量"), value: "" },
-        { _key: "3", field: qsTr("短路阻抗"), value: "" },
-        { _key: "4", field: qsTr("冷却方式"), value: "" },
-        { _key: "5", field: qsTr("绕组型式"), value: "" },
-        { _key: "6", field: qsTr("厂家"), value: "" },
-        { _key: "7", field: qsTr("出厂日期"), value: "" },
-        { _key: "8", field: qsTr("投运日期"), value: "" },
-        { _key: "9", field: qsTr("站点信息"), value: "" }
-    ]
+    Component.onCompleted: {
+        loadAssetData()
+        loadSensorTabs()
+    }
 
-    property var assetColumns: [
-        { title: qsTr("项目"), dataIndex: "field", readOnly: true, width: 140, minimumWidth: 120 },
-        { title: qsTr("内容"), dataIndex: "value", editMultiline: true, minimumWidth: 220 }
-    ]
+    function loadAssetData() {
+        var rows = [
+            { _key: "1", field: qsTr("Transformer Model"), value: "" },
+            { _key: "2", field: qsTr("Capacity"), value: "" },
+            { _key: "3", field: qsTr("Short Circuit Impedance"), value: "" },
+            { _key: "4", field: qsTr("Cooling Method"), value: "" },
+            { _key: "5", field: qsTr("Winding Type"), value: "" },
+            { _key: "6", field: qsTr("Manufacturer"), value: "" },
+            { _key: "7", field: qsTr("Manufacturing Date"), value: "" },
+            { _key: "8", field: qsTr("Commissioning Date"), value: "" },
+            { _key: "9", field: qsTr("Site Information"), value: "" }
+        ]
+        var columns = [
+            { title: qsTr("Item"), dataIndex: "field", readOnly: true, width: 140, minimumWidth: 120 },
+            { title: qsTr("Content"), dataIndex: "value", editMultiline: true, minimumWidth: 220 }
+        ]
+        asset_table.columnSource = columns
+        asset_table.dataSource = rows
+    }
 
-    property var sensorColumns: [
-        { title: qsTr("传感器型号"), dataIndex: "model", minimumWidth: 120 },
-        { title: qsTr("传感器量程"), dataIndex: "range", minimumWidth: 120 },
-        { title: qsTr("点位名称"), dataIndex: "point", minimumWidth: 120 },
-        { title: qsTr("位置描述"), dataIndex: "location", minimumWidth: 140, editMultiline: true },
-        { title: qsTr("采样频率"), dataIndex: "rate", minimumWidth: 120 },
-        { title: qsTr("单位"), dataIndex: "unit", minimumWidth: 80 }
-    ]
+    function loadSensorTabs() {
+        var columns = [
+            { title: qsTr("Sensor Model"), dataIndex: "model", minimumWidth: 120 },
+            { title: qsTr("Sensor Range"), dataIndex: "range", minimumWidth: 120 },
+            { title: qsTr("Point Name"), dataIndex: "point", minimumWidth: 120 },
+            { title: qsTr("Location"), dataIndex: "location", minimumWidth: 140, editMultiline: true },
+            { title: qsTr("Sampling Rate"), dataIndex: "rate", minimumWidth: 120 },
+            { title: qsTr("Unit"), dataIndex: "unit", minimumWidth: 80 }
+        ]
+        
+        tab_view.appendTab("", qsTr("Temperature Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
+        tab_view.appendTab("", qsTr("Stress Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
+        tab_view.appendTab("", qsTr("Vibration Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
+        tab_view.appendTab("", qsTr("Noise Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
+    }
 
     function buildSensorRows(){
         var rows = []
@@ -57,9 +72,9 @@ FluScrollablePage{
             FluTableView{
                 id: table_view
                 anchors.fill: parent
-                columnSource: root.sensorColumns
                 Component.onCompleted: {
-                    table_view.dataSource = argument
+                    table_view.columnSource = argument.cols
+                    table_view.dataSource = argument.rows
                 }
             }
         }
@@ -84,10 +99,9 @@ FluScrollablePage{
                     spacing: 10
                     FluText{ text: qsTr("Customer ledger (manual input)") ; font: FluTextStyle.BodyStrong }
                     FluTableView{
+                        id: asset_table
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        columnSource: root.assetColumns
-                        dataSource: root.assetRows
                     }
                 }
             }
@@ -107,12 +121,6 @@ FluScrollablePage{
                         addButtonVisibility: false
                         closeButtonVisibility: FluTabViewType.Never
                         tabWidthBehavior: FluTabViewType.SizeToContent
-                        Component.onCompleted: {
-                            tab_view.appendTab("", qsTr("温度点位"), com_sensor_table, root.buildSensorRows())
-                            tab_view.appendTab("", qsTr("应力点位"), com_sensor_table, root.buildSensorRows())
-                            tab_view.appendTab("", qsTr("振动点位"), com_sensor_table, root.buildSensorRows())
-                            tab_view.appendTab("", qsTr("噪声点位"), com_sensor_table, root.buildSensorRows())
-                        }
                     }
                 }
             }
