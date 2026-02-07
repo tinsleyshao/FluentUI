@@ -65,13 +65,6 @@ FluScrollablePage{
         }
     }
 
-    Component.onCompleted: {
-        tab_view.appendTab("", qsTr("温度点位"), com_sensor_table, buildSensorRows())
-        tab_view.appendTab("", qsTr("应力点位"), com_sensor_table, buildSensorRows())
-        tab_view.appendTab("", qsTr("振动点位"), com_sensor_table, buildSensorRows())
-        tab_view.appendTab("", qsTr("噪声点位"), com_sensor_table, buildSensorRows())
-    }
-
     ColumnLayout{
         anchors.fill: parent
         spacing: 12
@@ -114,6 +107,12 @@ FluScrollablePage{
                         addButtonVisibility: false
                         closeButtonVisibility: FluTabViewType.Never
                         tabWidthBehavior: FluTabViewType.SizeToContent
+                        Component.onCompleted: {
+                            tab_view.appendTab("", qsTr("温度点位"), com_sensor_table, root.buildSensorRows())
+                            tab_view.appendTab("", qsTr("应力点位"), com_sensor_table, root.buildSensorRows())
+                            tab_view.appendTab("", qsTr("振动点位"), com_sensor_table, root.buildSensorRows())
+                            tab_view.appendTab("", qsTr("噪声点位"), com_sensor_table, root.buildSensorRows())
+                        }
                     }
                 }
             }
