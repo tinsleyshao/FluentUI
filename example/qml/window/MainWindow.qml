@@ -319,45 +319,48 @@ FluWindow {
         id:fps_item
     }
 
-    // 底部状态栏信息
-    Row {
+    // 底部状态栏
+    Rectangle {
+        id: statusBar
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            bottomMargin: 0
-            leftMargin: 5
-            rightMargin: 5
         }
         height: 30
-        spacing: 20
-        verticalCenter: Row.AlignVCenter
+        color: FluTheme.backgroundColor
 
-        // 当前日期时间
-        FluText {
-            text: {
-                var now = new Date();
-                var year = now.getFullYear();
-                var month = (now.getMonth() + 1).toString().padStart(2, '0');
-                var date = now.getDate().toString().padStart(2, '0');
-                var hours = now.getHours().toString().padStart(2, '0');
-                var minutes = now.getMinutes().toString().padStart(2, '0');
-                var seconds = now.getSeconds().toString().padStart(2, '0');
-                return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+        Row {
+            anchors {
+                fill: parent
+                leftMargin: 5
+                rightMargin: 5
             }
-            opacity: 0.5
-            font.pixelSize: 11
-            anchors.verticalCenter: parent.verticalCenter
-        }
+            verticalCenter: parent.verticalCenter
+            spacing: 20
 
-        Item { Layout.fillWidth: true }
+            FluText {
+                text: {
+                    var now = new Date();
+                    var year = now.getFullYear();
+                    var month = (now.getMonth() + 1).toString().padStart(2, '0');
+                    var date = now.getDate().toString().padStart(2, '0');
+                    var hours = now.getHours().toString().padStart(2, '0');
+                    var minutes = now.getMinutes().toString().padStart(2, '0');
+                    var seconds = now.getSeconds().toString().padStart(2, '0');
+                    return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+                }
+                opacity: 0.5
+                font.pixelSize: 11
+            }
 
-        // 版权信息
-        FluText {
-            text: "© 2024 版权所有"
-            opacity: 0.5
-            font.pixelSize: 11
-            anchors.verticalCenter: parent.verticalCenter
+            Item { width: 20; height: 1 }
+
+            FluText {
+                text: "© 2024 版权所有"
+                opacity: 0.5
+                font.pixelSize: 11
+            }
         }
     }
 
