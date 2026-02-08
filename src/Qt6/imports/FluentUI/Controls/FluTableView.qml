@@ -21,6 +21,8 @@ Rectangle {
     property color selectedBorderColor: FluTheme.primaryColor
     property color selectedColor: FluTools.withOpacity(FluTheme.primaryColor,0.3)
     property alias view: table_view
+    signal editFinished(int row, int column, string dataIndex, var newValue)
+    
     property var columnWidthProvider: function(column) {
         var columnModel = control.columnSource[column]
         var width = columnModel.width
@@ -401,8 +403,14 @@ Rectangle {
                     onEditTextChaged:
                         (text)=>{
                             var obj = control.getRow(row)
-                            obj[control.columnSource[column].dataIndex] = text
+                            var dataIndex = control.columnSource[column].dataIndex
+                            obj[dataIndex] = text
                             control.setRow(row,obj)
+                            // 同步数据回原始 dataSource
+                            if(control.dataSource && row < control.dataSource.length) {
+                                control.dataSource[row][dataIndex] = text
+                            }
+                            control.editFinished(row, column, dataIndex, text)
                         }
                     z:999
                 }

@@ -7,29 +7,26 @@ FluContentPage{
     id: root
     launchMode: FluPageType.SingleTask
     header: FluText{ text: qsTr("Asset Management") ; font: FluTextStyle.Title }
+    
+    property var assetData: []
 
     Component.onCompleted: {
         loadAssetData()
     }
 
     function loadAssetData() {
-        var rows = [
-            { _key: "1", field: qsTr("Transformer Model"), value: "" },
-            { _key: "2", field: qsTr("Capacity"), value: "" },
-            { _key: "3", field: qsTr("Short Circuit Impedance"), value: "" },
-            { _key: "4", field: qsTr("Cooling Method"), value: "" },
-            { _key: "5", field: qsTr("Winding Type"), value: "" },
-            { _key: "6", field: qsTr("Manufacturer"), value: "" },
-            { _key: "7", field: qsTr("Manufacturing Date"), value: "" },
-            { _key: "8", field: qsTr("Commissioning Date"), value: "" },
-            { _key: "9", field: qsTr("Site Information"), value: "" }
+        assetData = [
+            { _key: "1", itemName: qsTr("Transformer Model"), itemValue: "Model A" },
+            { _key: "2", itemName: qsTr("Capacity"), itemValue: "100 MVA" },
+            { _key: "3", itemName: qsTr("Short Circuit Impedance"), itemValue: "12%" },
+            { _key: "4", itemName: qsTr("Cooling Method"), itemValue: "ONAN" },
+            { _key: "5", itemName: qsTr("Winding Type"), itemValue: "YNyn0" },
+            { _key: "6", itemName: qsTr("Manufacturer"), itemValue: "ABC Corp" },
+            { _key: "7", itemName: qsTr("Manufacturing Date"), itemValue: "2020-01-15" },
+            { _key: "8", itemName: qsTr("Commissioning Date"), itemValue: "2020-06-20" },
+            { _key: "9", itemName: qsTr("Site Information"), itemValue: "Station X" }
         ]
-        var columns = [
-            { title: qsTr("Item"), dataIndex: "field", readOnly: true, width: 140, minimumWidth: 120 },
-            { title: qsTr("Content"), dataIndex: "value", editMultiline: true, minimumWidth: 220 }
-        ]
-        asset_table.columnSource = columns
-        asset_table.dataSource = rows
+        asset_table.dataSource = assetData
     }
 
     function loadSensorTabs() {
@@ -42,10 +39,17 @@ FluContentPage{
             { title: qsTr("Unit"), dataIndex: "unit", minimumWidth: 80 }
         ]
         
-        tab_view.appendTab("", qsTr("Temperature Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
-        tab_view.appendTab("", qsTr("Stress Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
-        tab_view.appendTab("", qsTr("Vibration Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
-        tab_view.appendTab("", qsTr("Noise Points"), com_sensor_table, {cols: columns, rows: buildSensorRows()})
+        var sensorData = buildSensorRows()
+        tab_view.appendTab("", qsTr("Temperature Points"), com_sensor_table, {cols: columns, rows: sensorData})
+        
+        sensorData = buildSensorRows()
+        tab_view.appendTab("", qsTr("Stress Points"), com_sensor_table, {cols: columns, rows: sensorData})
+        
+        sensorData = buildSensorRows()
+        tab_view.appendTab("", qsTr("Vibration Points"), com_sensor_table, {cols: columns, rows: sensorData})
+        
+        sensorData = buildSensorRows()
+        tab_view.appendTab("", qsTr("Noise Points"), com_sensor_table, {cols: columns, rows: sensorData})
     }
 
     function buildSensorRows(){
@@ -78,6 +82,9 @@ FluContentPage{
                         table_view.dataSource = argument.rows
                     }
                 }
+                onEditFinished: (row, column, dataIndex, newValue) => {
+                    console.log("传感器表编辑完成:", "行=" + row + ", 列=" + dataIndex + ", 新值=" + newValue)
+                }
             }
         }
     }
@@ -104,6 +111,13 @@ FluContentPage{
                         id: asset_table
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        columnSource: [
+                            { title: qsTr("Item"), dataIndex: "itemName", readOnly: true },
+                            { title: qsTr("Content"), dataIndex: "itemValue" }
+                        ]
+                        onEditFinished: (row, column, dataIndex, newValue) => {
+                            console.log("编辑完成:", "行=" + row + ", 列=" + dataIndex + ", 新值=" + newValue)
+                        }
                     }
                 }
             }
@@ -116,16 +130,19 @@ FluContentPage{
                     anchors.fill: parent
                     spacing: 10
                     FluText{ text: qsTr("Sensor configuration") ; font: FluTextStyle.BodyStrong }
-                    FluTabView{
-                        id: tab_view
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        addButtonVisibility: false
-                        closeButtonVisibility: FluTabViewType.Never
-                        tabWidthBehavior: FluTabViewType.SizeToContent
-                        Component.onCompleted: {
-                            root.loadSensorTabs()
-                        }
+                    Item{
+                         Layout.fillWidth: true
+                         Layout.fillHeight: true
+                         FluTabView{
+                             id: tab_view
+                             anchors.fill: parent
+                             addButtonVisibility: false
+                             closeButtonVisibility: FluTabViewType.Never
+                             tabWidthBehavior: FluTabViewType.SizeToContent
+                             Component.onCompleted: {
+                                 root.loadSensorTabs()
+                             }
+                         }
                     }
                 }
             }

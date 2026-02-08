@@ -5,23 +5,42 @@ import "../global"
 
 FluScrollablePage{
     launchMode: FluPageType.SingleTask
-    header: FluText{ text: qsTr("Overview") ; font: FluTextStyle.Title }
+    header: Item{}
+
+    Image {
+        id: bg
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        source: "qrc:/example/res/image/bg_home_header.png"
+        asynchronous: true
+        z: -1
+    }
 
     ColumnLayout{
         anchors.fill: parent
         spacing: 12
         Layout.margins: 16
 
-        FluFrame{
+        Item{
             Layout.fillWidth: true
-            FluText{ text: qsTr("Current health level") ; font: FluTextStyle.BodyStrong }
-            FluText{ text: qsTr("Health index: HH (sample)") ; color: FluColors.Grey120 }
-        }
-
-        FluFrame{
-            Layout.fillWidth: true
-            FluText{ text: qsTr("Recent warnings") ; font: FluTextStyle.BodyStrong }
-            ListView{ height: 120 }
+            Layout.preferredHeight: 260
+            Rectangle{
+                anchors.fill: parent
+                gradient: Gradient{
+                    GradientStop { position: 0.8; color: FluTheme.dark ? Qt.rgba(0,0,0,0) : Qt.rgba(1,1,1,0) }
+                    GradientStop { position: 1.0; color: FluTheme.dark ? Qt.rgba(0,0,0,1) : Qt.rgba(1,1,1,1) }
+                }
+            }
+            FluText{
+                text: qsTr("Overview")
+                font: FluTextStyle.TitleLarge
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    topMargin: 20
+                    leftMargin: 20
+                }
+            }
         }
     }
 }
