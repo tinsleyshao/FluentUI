@@ -11,7 +11,7 @@ FluScrollablePage{
         id: bg
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
-        source: "qrc:/example/res/image/bg_home_header.png"
+        source: "qrc:/example/res/image/bg_overview_header.png"
         asynchronous: true
         z: -1
     }

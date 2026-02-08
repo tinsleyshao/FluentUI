@@ -15,7 +15,7 @@ FluContentPage{
     }
 
     function loadAssetData() {
-        assetData = [
+        var tableData = [
             { _key: "1", itemName: qsTr("Transformer Model"), itemValue: "Model A" },
             { _key: "2", itemName: qsTr("Capacity"), itemValue: "100 MVA" },
             { _key: "3", itemName: qsTr("Short Circuit Impedance"), itemValue: "12%" },
@@ -26,6 +26,11 @@ FluContentPage{
             { _key: "8", itemName: qsTr("Commissioning Date"), itemValue: "2020-06-20" },
             { _key: "9", itemName: qsTr("Site Information"), itemValue: "Station X" }
         ]
+        assetData = tableData
+        asset_table.dataSource = tableData
+    }
+    
+    function refreshTable() {
         asset_table.dataSource = assetData
     }
 
@@ -116,6 +121,13 @@ FluContentPage{
                             { title: qsTr("Content"), dataIndex: "itemValue" }
                         ]
                         onEditFinished: (row, column, dataIndex, newValue) => {
+                            // 数据已经被保存到表格内部模型，这里取出来更新原始数据源
+                            var rowData = asset_table.getRow(row)
+                            if(rowData) {
+                                assetData[row] = rowData
+                            }
+                            // 刷新表格以显示最新数据
+                            refreshTable()
                             console.log("编辑完成:", "行=" + row + ", 列=" + dataIndex + ", 新值=" + newValue)
                         }
                     }

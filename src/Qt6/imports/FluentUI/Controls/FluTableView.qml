@@ -406,10 +406,6 @@ Rectangle {
                             var dataIndex = control.columnSource[column].dataIndex
                             obj[dataIndex] = text
                             control.setRow(row,obj)
-                            // 同步数据回原始 dataSource
-                            if(control.dataSource && row < control.dataSource.length) {
-                                control.dataSource[row][dataIndex] = text
-                            }
                             control.editFinished(row, column, dataIndex, text)
                         }
                     z:999
