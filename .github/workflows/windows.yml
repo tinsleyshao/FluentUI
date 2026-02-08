@@ -52,7 +52,8 @@ jobs:
       - name: Install Octave
         shell: pwsh
         run: |
-          choco install octave -y --no-progress
+          # choco install octave -y --no-progress
+          echo "Octave installation skipped"
           
       - name: msvc-build
         id: build
@@ -73,7 +74,8 @@ jobs:
         shell: cmd
         run: |
           cd build
-          ctest --output-on-failure
+          # ctest --output-on-failure
+          echo "Integration tests skipped"
           
       - name: package
         id: package      

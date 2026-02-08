@@ -67,13 +67,16 @@ FluScrollablePage{
     Component{
         id: com_sensor_table
         Item{
+            property var argument
             anchors.fill: parent
             FluTableView{
                 id: table_view
                 anchors.fill: parent
                 Component.onCompleted: {
-                    table_view.columnSource = argument.cols
-                    table_view.dataSource = argument.rows
+                    if(argument) {
+                        table_view.columnSource = argument.cols
+                        table_view.dataSource = argument.rows
+                    }
                 }
             }
         }
