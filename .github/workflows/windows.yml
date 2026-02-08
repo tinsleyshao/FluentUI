@@ -74,8 +74,8 @@ jobs:
         shell: cmd
         run: |
           cd build
-          # ctest --output-on-failure
-          echo "Integration tests skipped"
+          REM ctest --output-on-failure
+          echo Integration tests skipped
           
       - name: package
         id: package      
