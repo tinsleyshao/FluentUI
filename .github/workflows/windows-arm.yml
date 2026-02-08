@@ -1,0 +1,113 @@
+name: Windows ARM64
+on: 
+  push:
+    paths:
+      - '*.txt'
+      - 'src/**'
+      - 'example/**'
+      - 'scripts/**'
+      - '.github/workflows/windows-arm.yml'
+  pull_request:
+    paths:
+      - '*.txt'
+      - 'example/**'
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/windows-arm.yml'
+      
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        include:
+          - qt_ver: 6.6.2        
+            qt_arch: win64_msvc2019_arm64
+            msvc_arch: amd64_arm64
+            qt_arch_install: msvc2019_arm64
+            pkg_arch: arm64
+    env:
+      targetName: example.exe
+      fileName: example
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          
+      - name: Setup ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+        with:
+          version: 1.10.2
+          
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qt_ver }}
+          arch: ${{ matrix.qt_arch }}
+          cache: ${{steps.cache-qt.outputs.cache-hit}}
+          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats qtspeech qt3d'
+          
+      - name: Install Octave
+        shell: pwsh
+        run: |
+          # choco install octave -y --no-progress
+          echo "Octave installation skipped"
+          
+      - name: msvc-build
+        id: build
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
+          ninja --version
+          mkdir build
+          cd build
+          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch_install }} -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          cmake --build . --target all --config Release --parallel
+          echo winSdkDir=%WindowsSdkDir% >> %GITHUB_ENV%
+          echo winSdkVer=%WindowsSdkVersion% >> %GITHUB_ENV%
+          echo vcToolsInstallDir=%VCToolsInstallDir% >> %GITHUB_ENV%
+          echo vcToolsRedistDir=%VCToolsRedistDir% >> %GITHUB_ENV%
+          
+      - name: Run integration tests
+        shell: cmd
+        run: |
+          cd build
+          REM ctest --output-on-failure
+          echo Integration tests skipped for ARM64 cross-build
+          
+      - name: package
+        id: package      
+        env:
+          msvcArch: ${{ matrix.pkg_arch }}          
+        shell: pwsh
+        run: |
+          $commitHash = "${{ github.sha }}".Substring(0, 7)
+          $dateTime = Get-Date -Format "yyyyMMdd_HHmmss"
+          $archiveName = "${{ env.fileName }}-${commitHash}-${dateTime}-arm64"
+          & scripts\windows-publish.ps1 ${archiveName} ${{ env.targetName }}
+          # 记录packageName给后续step
+          echo "::set-output name=packageName::${archiveName}"     
+           
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.packageName }}
+          path: dist
+          
+      - name: inno setup install
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: zhuzichu520/inno-setup-action@v1.0.1
+        with:
+          filepath: ./package/InstallerScript.iss
+          
+      - name: uploadRelease
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./package/installer.exe
+          asset_name: ${{ env.fileName }}_${{ github.ref_name }}_win64_${{ matrix.qt_arch_install }}_Qt${{ matrix.qt_ver }}.exe
+          tag: ${{ github.ref }}
+          overwrite: true
