@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.15
 import FluentUI 1.0
 import "../global"
 
-FluScrollablePage{
+FluContentPage{
     id: root
     launchMode: FluPageType.SingleTask
     header: FluText{ text: qsTr("Asset Management") ; font: FluTextStyle.Title }
