@@ -335,9 +335,11 @@ FluWindow {
                 fill: parent
                 leftMargin: 5
                 rightMargin: 5
+                topMargin: 5
+                bottomMargin: 5
             }
-            verticalCenter: parent.verticalCenter
             spacing: 20
+            verticalAlignment: Row.AlignVCenter
 
             FluText {
                 text: {
@@ -354,7 +356,7 @@ FluWindow {
                 font.pixelSize: 11
             }
 
-            Item { width: 20; height: 1 }
+            Item { width: 10; height: parent.height }
 
             FluText {
                 text: "© 2024 版权所有"
