@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param (
-    [string] $archiveName, [string] $targetName
+    [string] $archiveName, [string] $targetName, [string] $qtBinDir
 )
 # 外部环境变量包括:
 # archiveName: ${{ matrix.qt_ver }}-${{ matrix.qt_arch }}
@@ -28,17 +28,68 @@ function Main() {
     New-Item -ItemType Directory dist
     # 拷贝exe
     Copy-Item bin\Release\* dist -Force -Recurse | Out-Null
+    
+    # 确定 windeployqt 路径
+    $windeployqt = "windeployqt"
+    if (-not [string]::IsNullOrEmpty($qtBinDir)) {
+        $windeployqt = Join-Path $qtBinDir "windeployqt.exe"
+        Write-Host "Using explicit windeployqt: $windeployqt"
+    } else {
+        Write-Host "Using windeployqt from PATH"
+    }
+
     # 拷贝依赖
-    windeployqt --qmldir . --plugindir dist\plugins --no-translations --no-opengl-sw dist\$targetName
+    # 注意: 如果手动拷贝了 DLL，windeployqt 应该会跳过它们，只处理插件和 QML
+    & $windeployqt --qmldir . --plugindir dist\plugins --no-translations --no-opengl-sw dist\$targetName
+    
+    if (-not [string]::IsNullOrEmpty($qtBinDir)) {
+        # 强制覆盖核心 DLL，防止 windeployqt 拷贝错误架构的文件
+        Write-Host "Manually copying Core DLLs from $qtBinDir to dist AFTER windeployqt..."
+        Get-ChildItem -Path $qtBinDir -Filter "Qt6*.dll" | ForEach-Object {
+            Copy-Item $_.FullName -Destination "dist\" -Force
+        }
+        # 同时也拷贝 d3dcompiler_47.dll 如果存在
+        if (Test-Path "$qtBinDir\d3dcompiler_47.dll") {
+            Copy-Item "$qtBinDir\d3dcompiler_47.dll" -Destination "dist\" -Force
+        }
+    }
+
     # 删除不必要的文件
     $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
     Remove-Item -Path dist -Include $excludeList -Recurse -Force
     # 拷贝vcRedist dll
-    $redistDll="{0}{1}\*.CRT\*.dll" -f $env:vcToolsRedistDir.Trim(),$env:msvcArch
-    Copy-Item $redistDll dist\
+    # 使用 Trim() 去除可能存在的环境变量尾部空格 (由于 cmd echo >> 导致)
+    $vcToolsRedistDir = if ($env:vcToolsRedistDir) { $env:vcToolsRedistDir.Trim() } else { "" }
+    $msvcArch = if ($env:msvcArch) { $env:msvcArch.Trim() } else { "" }
+    $winSdkDir = if ($env:winSdkDir) { $env:winSdkDir.Trim() } else { "" }
+    $winSdkVer = if ($env:winSdkVer) { $env:winSdkVer.Trim() } else { "" }
+
+    $vcRedistPath = Join-Path $vcToolsRedistDir $msvcArch
+    $vcRedistGlob = Join-Path $vcRedistPath "*.CRT\*.dll"
+    if (Test-Path $vcRedistPath) {
+        Write-Host "Copying VC Redist from $vcRedistGlob"
+        Copy-Item $vcRedistGlob dist\
+    } else {
+        Write-Host "Warning: VC Redist path not found: $vcRedistPath"
+    }
+
     # 拷贝WinSDK dll
-    $sdkDll="{0}Redist\{1}ucrt\DLLs\{2}\*.dll" -f $env:winSdkDir.Trim(),$env:winSdkVer.Trim(),$env:msvcArch
-    Copy-Item $sdkDll dist\
+    if (-not [string]::IsNullOrEmpty($winSdkDir) -and -not [string]::IsNullOrEmpty($winSdkVer)) {
+        $sdkPath = Join-Path $winSdkDir "Redist"
+        $sdkPath = Join-Path $sdkPath $winSdkVer
+        $sdkPath = Join-Path $sdkPath "ucrt\DLLs"
+        $sdkPath = Join-Path $sdkPath $msvcArch
+        
+        if (Test-Path $sdkPath) {
+            Write-Host "Copying SDK Redist from $sdkPath"
+            Copy-Item "$sdkPath\*.dll" dist\
+        } else {
+            Write-Host "Warning: SDK Redist path not found: $sdkPath"
+        }
+    } else {
+        Write-Host "Warning: WinSDK environment variables missing."
+    }
+    
     # 打包zip
     Compress-Archive -Path dist $archiveName'.zip'
 }

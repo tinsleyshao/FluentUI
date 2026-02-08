@@ -93,10 +93,11 @@ jobs:
           msvcArch: ${{ matrix.pkg_arch }}          
         shell: pwsh
         run: |
+          $qtBinPath = "D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch_install }}\bin"
           $commitHash = "${{ github.sha }}".Substring(0, 7)
           $dateTime = Get-Date -Format "yyyyMMdd_HHmmss"
           $archiveName = "${{ env.fileName }}-${commitHash}-${dateTime}-arm64"
-          & scripts\windows-publish.ps1 ${archiveName} ${{ env.targetName }}
+          & scripts\windows-publish.ps1 ${archiveName} ${{ env.targetName }} ${qtBinPath}
           # 记录packageName给后续step
           echo "::set-output name=packageName::${archiveName}"     
            
