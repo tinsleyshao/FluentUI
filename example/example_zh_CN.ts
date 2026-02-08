@@ -613,6 +613,34 @@
         <source>Test Crash</source>
         <translation type="unfinished">测试崩溃</translation>
     </message>
+    <message>
+        <source>Auto Analysis</source>
+        <translation type="unfinished">自动分析</translation>
+    </message>
+    <message>
+        <source>Overview</source>
+        <translation type="unfinished">概览</translation>
+    </message>
+    <message>
+        <source>Asset Management</source>
+        <translation type="unfinished">资产管理</translation>
+    </message>
+    <message>
+        <source>Regular Check</source>
+        <translation type="unfinished">定期点检</translation>
+    </message>
+    <message>
+        <source>Vib/Noise Processing</source>
+        <translation type="unfinished">振动/噪声处理</translation>
+    </message>
+    <message>
+        <source>Multi-parameter Fusion</source>
+        <translation type="unfinished">多参融合</translation>
+    </message>
+    <message>
+        <source>Report Export</source>
+        <translation type="unfinished">报告导出</translation>
+    </message>
 </context>
 <context>
     <name>LoginWindow</name>
@@ -3379,6 +3407,105 @@ Some contents...</source>
         <location filename="qml/page/T_Watermark.qml" line="108"/>
         <source>textColor:</source>
         <translation type="unfinished">水印颜色：</translation>
+    </message>
+</context>
+<context>
+    <name>T_UI_AssetManagement</name>
+    <message>
+        <source>Asset Management</source>
+        <translation>资产管理</translation>
+    </message>
+    <message>
+        <source>Transformer Model</source>
+        <translation>变压器型号</translation>
+    </message>
+    <message>
+        <source>Capacity</source>
+        <translation>容量</translation>
+    </message>
+    <message>
+        <source>Short Circuit Impedance</source>
+        <translation>短路阻抗</translation>
+    </message>
+    <message>
+        <source>Cooling Method</source>
+        <translation>冷却方式</translation>
+    </message>
+    <message>
+        <source>Winding Type</source>
+        <translation>绕组类型</translation>
+    </message>
+    <message>
+        <source>Manufacturer</source>
+        <translation>生产厂家</translation>
+    </message>
+    <message>
+        <source>Manufacturing Date</source>
+        <translation>生产日期</translation>
+    </message>
+    <message>
+        <source>Commissioning Date</source>
+        <translation>投运日期</translation>
+    </message>
+    <message>
+        <source>Site Information</source>
+        <translation>站点信息</translation>
+    </message>
+    <message>
+        <source>Item</source>
+        <translation>项目</translation>
+    </message>
+    <message>
+        <source>Content</source>
+        <translation>内容</translation>
+    </message>
+    <message>
+        <source>Sensor Model</source>
+        <translation>传感器型号</translation>
+    </message>
+    <message>
+        <source>Sensor Range</source>
+        <translation>传感器量程</translation>
+    </message>
+    <message>
+        <source>Point Name</source>
+        <translation>测点名称</translation>
+    </message>
+    <message>
+        <source>Location</source>
+        <translation>安装位置</translation>
+    </message>
+    <message>
+        <source>Sampling Rate</source>
+        <translation>采样率</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation>单位</translation>
+    </message>
+    <message>
+        <source>Temperature Points</source>
+        <translation>温度测点</translation>
+    </message>
+    <message>
+        <source>Stress Points</source>
+        <translation>应力测点</translation>
+    </message>
+    <message>
+        <source>Vibration Points</source>
+        <translation>振动测点</translation>
+    </message>
+    <message>
+        <source>Noise Points</source>
+        <translation>噪声测点</translation>
+    </message>
+    <message>
+        <source>Customer ledger (manual input)</source>
+        <translation>客户台账（人工录入）</translation>
+    </message>
+    <message>
+        <source>Sensor configuration</source>
+        <translation>传感器配置</translation>
     </message>
 </context>
 </TS>
