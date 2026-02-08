@@ -29,7 +29,7 @@ function Main() {
     # 拷贝exe
     Copy-Item bin\Release\* dist -Force -Recurse | Out-Null
     # 拷贝依赖
-    windeployqt --qmldir . --plugindir dist\plugins --no-translations --compiler-runtime dist\$targetName
+    windeployqt --qmldir . --plugindir dist\plugins --no-translations --no-opengl-sw dist\$targetName
     # 删除不必要的文件
     $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
     Remove-Item -Path dist -Include $excludeList -Recurse -Force

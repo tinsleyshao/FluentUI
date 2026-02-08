@@ -121,17 +121,33 @@ Rectangle {
         id:com_edit
         FluTextBox{
             id:text_box
+            property string _lastText: String(display)
+            property bool _committed: false
             text: String(display)
             readOnly: true === control.columnSource[column].readOnly
             Component.onCompleted: {
                 forceActiveFocus()
                 selectAll()
             }
-            onCommit: {
-                if(!readOnly){
-                    editTextChaged(text_box.text)
+            function commitIfNeeded(){
+                if(_committed){
+                    return
                 }
+                _committed = true
+                if(!readOnly && text_box.text !== _lastText){
+                    editTextChaged(text_box.text)
+                    _lastText = text_box.text
+                }
+            }
+            onCommit: {
+                commitIfNeeded()
                 control.closeEditor()
+            }
+            onActiveFocusChanged: {
+                if(!activeFocus){
+                    commitIfNeeded()
+                    control.closeEditor()
+                }
             }
         }
     }
@@ -147,6 +163,8 @@ Rectangle {
                 boundsBehavior: Flickable.StopAtBounds
                 TextArea.flickable: FluMultilineTextBox {
                     id:text_box
+                    property string _lastText: String(display)
+                    property bool _committed: false
                     text: String(display)
                     readOnly: true === control.columnSource[column].readOnly
                     verticalAlignment: TextInput.AlignVCenter
@@ -156,11 +174,25 @@ Rectangle {
                         selectAll()
                     }
                     rightPadding: 34
-                    onCommit: {
-                        if(!readOnly){
-                            editTextChaged(text_box.text)
+                    function commitIfNeeded(){
+                        if(_committed){
+                            return
                         }
+                        _committed = true
+                        if(!readOnly && text_box.text !== _lastText){
+                            editTextChaged(text_box.text)
+                            _lastText = text_box.text
+                        }
+                    }
+                    onCommit: {
+                        commitIfNeeded()
                         control.closeEditor()
+                    }
+                    onActiveFocusChanged: {
+                        if(!activeFocus){
+                            commitIfNeeded()
+                            control.closeEditor()
+                        }
                     }
                 }
             }
