@@ -1,19 +1,20 @@
 name: Windows
 on: 
-  push:
-    paths:
-      - '*.txt'
-      - 'src/**'
-      - 'example/**'
-      - 'scripts/**'
-      - '.github/workflows/windows.yml'
-  pull_request:
-    paths:
-      - '*.txt'
-      - 'example/**'
-      - 'src/**'
-      - 'scripts/**'
-      - '.github/workflows/windows.yml'
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - '*.txt'
+  #     - 'src/**'
+  #     - 'example/**'
+  #     - 'scripts/**'
+  #     - '.github/workflows/windows.yml'
+  # pull_request:
+  #   paths:
+  #     - '*.txt'
+  #     - 'example/**'
+  #     - 'src/**'
+  #     - 'scripts/**'
+  #     - '.github/workflows/windows.yml'
       
 jobs:
   build:
