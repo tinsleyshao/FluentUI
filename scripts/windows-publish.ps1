@@ -26,6 +26,41 @@ $currentDir = Get-Location
 Write-Host "currentDir" $currentDir
 Write-Host "scriptDir" $scriptDir
 
+function Get-FileArch {
+    param([string]$filePath)
+    try {
+        $stream = [System.IO.File]::OpenRead($filePath)
+        $reader = [System.IO.BinaryReader]::new($stream)
+        
+        # Read DOS header
+        if ($reader.ReadUInt16() -ne 0x5A4D) { 
+            $reader.Close(); $stream.Close(); return "Unknown" 
+        } # MZ
+        
+        $stream.Seek(60, [System.IO.SeekOrigin]::Begin)
+        $peOffset = $reader.ReadInt32()
+        
+        $stream.Seek($peOffset, [System.IO.SeekOrigin]::Begin)
+        if ($reader.ReadUInt32() -ne 0x00004550) { 
+            $reader.Close(); $stream.Close(); return "Unknown" 
+        } # PE\0\0
+        
+        $machine = $reader.ReadUInt16()
+        
+        $reader.Close()
+        $stream.Close()
+        
+        switch ($machine) {
+            0x8664 { return "x64" }
+            0xAA64 { return "ARM64" }
+            0x014c { return "x86" }
+            default { return "0x{0:X}" -f $machine }
+        }
+    } catch {
+        return "Error"
+    }
+}
+
 function Main() {
 
     New-Item -ItemType Directory dist
@@ -49,34 +84,41 @@ function Main() {
     # 并尝试从 targetQtDir 对应的位置找到同名文件进行覆盖。
     if (-not [string]::IsNullOrEmpty($targetQtDir)) {
         Write-Host "Overwriting dependencies from Target Qt Dir: $targetQtDir"
+        if (-not (Test-Path $targetQtDir)) {
+            Write-Error "Target Qt Dir does not exist: $targetQtDir"
+        }
         
+        $distDir = (Get-Item dist).FullName
         $files = Get-ChildItem -Path dist -Filter "*.dll" -Recurse
         foreach ($file in $files) {
-            $relPath = $file.FullName.Substring((Get-Item dist).FullName.Length + 1)
+            $relPath = $file.FullName.Substring($distDir.Length + 1)
             $targetFile = $null
             
-            # Case 1: Root DLLs -> target/bin
-            if (-not $relPath.Contains("\")) {
+            # 策略1: 根目录 DLL -> target/bin
+            if (-not $relPath.Contains("\") -and -not $relPath.Contains("/")) {
                  $candidate = Join-Path $targetQtDir "bin\$relPath"
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
-            # Case 2: Plugins -> target/plugins
-            elseif ($relPath.StartsWith("plugins\")) {
-                 $subPath = $relPath.Substring(8) # len("plugins\")
+            # 策略2: Plugins -> target/plugins
+            elseif ($relPath.StartsWith("plugins")) {
+                 $subPath = $relPath.Substring(7) # Remove 'plugins' prefix (keep slash processing to Join-Path)
+                 # Join-Path might handle leading slash, but safer to trim
+                 $subPath = $subPath.TrimStart("\").TrimStart("/")
                  $candidate = Join-Path $targetQtDir "plugins\$subPath"
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
-            # Case 3: Other folders (assume QML) -> target/qml
-            else {
-                 $candidate = Join-Path $targetQtDir "qml\$relPath"
+            
+            # 策略3 (兜底): 如果是个 Qt DLL 但还没找到，尝试直接在 bin 下找
+            if ($null -eq $targetFile -and $file.Name.StartsWith("Qt")) {
+                 $candidate = Join-Path $targetQtDir "bin\$($file.Name)"
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
-            
+
             if ($null -ne $targetFile) {
-                Write-Host "Overwriting $relPath with $targetFile"
+                Write-Host "Overwriting $relPath from $targetFile"
                 Copy-Item $targetFile $file.FullName -Force
             } else {
-                Write-Host "Warning: Could not find overwrite source for $relPath"
+                Write-Host "Warning: Could not find overwrite source for $relPath in $targetQtDir"
             }
         }
 
@@ -90,10 +132,25 @@ function Main() {
             }
         }
 
-        # 如果我们在构建 ARM64，清理掉 windeployqt带进来的 x64 OpenSSL 库
+        # 如果我们在构建 ARM64，验证架构
         if ($targetQtDir -match "arm64") {
             Write-Host "Cleaning up x64 specific artifacts from dist..."
             Remove-Item "dist\*-x64.dll" -Force -ErrorAction SilentlyContinue
+
+            Write-Host "Validating DLL Architectures..."
+            $hasError = $false
+            Get-ChildItem -Path dist -Filter "*.dll" -Recurse | ForEach-Object {
+                $arch = Get-FileArch $_.FullName
+                if ($arch -eq "x64" -or $arch -eq "x86") {
+                     Write-Host "ERROR: File $($_.Name) is $arch (Expected ARM64)" -ForegroundColor Red
+                     $hasError = $true
+                } else {
+                     Write-Host "OK: $($_.Name) is $arch" -ForegroundColor Green
+                }
+            }
+            if ($hasError) {
+                Write-Warning "Some DLLs have incorrect architecture! The application may not start."
+            }
         }
     }
 
