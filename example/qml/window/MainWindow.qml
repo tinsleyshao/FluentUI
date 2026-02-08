@@ -319,53 +319,6 @@ FluWindow {
         id:fps_item
     }
 
-    // 底部状态栏
-    Rectangle {
-        id: statusBar
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-        height: 30
-        color: FluTheme.backgroundColor
-
-        Row {
-            anchors {
-                fill: parent
-                leftMargin: 5
-                rightMargin: 5
-                topMargin: 5
-                bottomMargin: 5
-            }
-            spacing: 20
-            verticalAlignment: Row.AlignVCenter
-
-            FluText {
-                text: {
-                    var now = new Date();
-                    var year = now.getFullYear();
-                    var month = (now.getMonth() + 1).toString().padStart(2, '0');
-                    var date = now.getDate().toString().padStart(2, '0');
-                    var hours = now.getHours().toString().padStart(2, '0');
-                    var minutes = now.getMinutes().toString().padStart(2, '0');
-                    var seconds = now.getSeconds().toString().padStart(2, '0');
-                    return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
-                }
-                opacity: 0.5
-                font.pixelSize: 11
-            }
-
-            Item { width: 10; height: parent.height }
-
-            FluText {
-                text: "© 2024 版权所有"
-                opacity: 0.5
-                font.pixelSize: 11
-            }
-        }
-    }
-
     FluContentDialog{
         property string newVerson
         property string body
