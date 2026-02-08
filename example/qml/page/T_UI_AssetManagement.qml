@@ -10,7 +10,6 @@ FluScrollablePage{
 
     Component.onCompleted: {
         loadAssetData()
-        loadSensorTabs()
     }
 
     function loadAssetData() {
@@ -121,6 +120,9 @@ FluScrollablePage{
                         addButtonVisibility: false
                         closeButtonVisibility: FluTabViewType.Never
                         tabWidthBehavior: FluTabViewType.SizeToContent
+                        Component.onCompleted: {
+                            root.loadSensorTabs()
+                        }
                     }
                 }
             }
