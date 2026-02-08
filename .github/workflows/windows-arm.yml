@@ -93,11 +93,12 @@ jobs:
           msvcArch: ${{ matrix.pkg_arch }}          
         shell: pwsh
         run: |
-          $qtBinPath = "D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch_install }}\bin"
+          $targetQtDir = "D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch_install }}"
+          $windeployqtPath = "D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\msvc2019_64\bin\windeployqt.exe"
           $commitHash = "${{ github.sha }}".Substring(0, 7)
           $dateTime = Get-Date -Format "yyyyMMdd_HHmmss"
           $archiveName = "${{ env.fileName }}-${commitHash}-${dateTime}-arm64"
-          & scripts\windows-publish.ps1 ${archiveName} ${{ env.targetName }} ${qtBinPath}
+          & scripts\windows-publish.ps1 -archiveName ${archiveName} -targetName ${{ env.targetName }} -targetQtDir ${targetQtDir} -windeployqtPath ${windeployqtPath}
           # 记录packageName给后续step
           echo "::set-output name=packageName::${archiveName}"     
            

@@ -1,6 +1,9 @@
 [CmdletBinding()]
 param (
-    [string] $archiveName, [string] $targetName, [string] $qtBinDir
+    [string] $archiveName, 
+    [string] $targetName, 
+    [string] $targetQtDir,       # path to target Qt root (e.g. msvc2019_arm64)
+    [string] $windeployqtPath    # path to windeployqt.exe (e.g. from msvc2019_64/bin)
 )
 # 外部环境变量包括:
 # archiveName: ${{ matrix.qt_ver }}-${{ matrix.qt_arch }}
@@ -29,28 +32,68 @@ function Main() {
     # 拷贝exe
     Copy-Item bin\Release\* dist -Force -Recurse | Out-Null
     
-    # 确定 windeployqt 路径
+    # 确定 windeployqt 执行路径
     $windeployqt = "windeployqt"
-    if (-not [string]::IsNullOrEmpty($qtBinDir)) {
-        $windeployqt = Join-Path $qtBinDir "windeployqt.exe"
+    if (-not [string]::IsNullOrEmpty($windeployqtPath)) {
+        $windeployqt = $windeployqtPath
         Write-Host "Using explicit windeployqt: $windeployqt"
     } else {
-        Write-Host "Using windeployqt from PATH"
+         Write-Host "Using windeployqt from PATH"
     }
 
-    # 拷贝依赖
-    # 注意: 如果手动拷贝了 DLL，windeployqt 应该会跳过它们，只处理插件和 QML
+    # 运行 windeployqt (可能拷贝错误的架构，稍后覆盖)
+    # 注意: 不使用 --compiler-runtime 因为我们后面会手动处理 VC 运行时
     & $windeployqt --qmldir . --plugindir dist\plugins --no-translations --no-opengl-sw dist\$targetName
     
-    if (-not [string]::IsNullOrEmpty($qtBinDir)) {
-        # 强制覆盖核心 DLL，防止 windeployqt 拷贝错误架构的文件
-        Write-Host "Manually copying Core DLLs from $qtBinDir to dist AFTER windeployqt..."
-        Get-ChildItem -Path $qtBinDir -Filter "Qt6*.dll" | ForEach-Object {
-            Copy-Item $_.FullName -Destination "dist\" -Force
+    # 核心步骤: 如果指定了 targetQtDir，遍历 dist 目录下的所有 DLL，
+    # 并尝试从 targetQtDir 对应的位置找到同名文件进行覆盖。
+    if (-not [string]::IsNullOrEmpty($targetQtDir)) {
+        Write-Host "Overwriting dependencies from Target Qt Dir: $targetQtDir"
+        
+        $files = Get-ChildItem -Path dist -Filter "*.dll" -Recurse
+        foreach ($file in $files) {
+            $relPath = $file.FullName.Substring((Get-Item dist).FullName.Length + 1)
+            $targetFile = $null
+            
+            # Case 1: Root DLLs -> target/bin
+            if (-not $relPath.Contains("\")) {
+                 $candidate = Join-Path $targetQtDir "bin\$relPath"
+                 if (Test-Path $candidate) { $targetFile = $candidate }
+            }
+            # Case 2: Plugins -> target/plugins
+            elseif ($relPath.StartsWith("plugins\")) {
+                 $subPath = $relPath.Substring(8) # len("plugins\")
+                 $candidate = Join-Path $targetQtDir "plugins\$subPath"
+                 if (Test-Path $candidate) { $targetFile = $candidate }
+            }
+            # Case 3: Other folders (assume QML) -> target/qml
+            else {
+                 $candidate = Join-Path $targetQtDir "qml\$relPath"
+                 if (Test-Path $candidate) { $targetFile = $candidate }
+            }
+            
+            if ($null -ne $targetFile) {
+                Write-Host "Overwriting $relPath with $targetFile"
+                Copy-Item $targetFile $file.FullName -Force
+            } else {
+                Write-Host "Warning: Could not find overwrite source for $relPath"
+            }
         }
-        # 同时也拷贝 d3dcompiler_47.dll 如果存在
-        if (Test-Path "$qtBinDir\d3dcompiler_47.dll") {
-            Copy-Item "$qtBinDir\d3dcompiler_47.dll" -Destination "dist\" -Force
+
+        # 显式处理 OpenSSL 库 (通常命名包含架构后缀，导致上面的同名覆盖失效)
+        Write-Host "Explicitly copying OpenSSL DLLs from Target Qt Dir..."
+        $opensslPattern = @("libssl*.dll", "libcrypto*.dll")
+        if (Test-Path (Join-Path $targetQtDir "bin")) {
+            Get-ChildItem -Path (Join-Path $targetQtDir "bin") -Include $opensslPattern -Recurse | ForEach-Object {
+                Write-Host "Copying OpenSSL: $($_.Name)"
+                Copy-Item $_.FullName -Destination "dist\" -Force
+            }
+        }
+
+        # 如果我们在构建 ARM64，清理掉 windeployqt带进来的 x64 OpenSSL 库
+        if ($targetQtDir -match "arm64") {
+            Write-Host "Cleaning up x64 specific artifacts from dist..."
+            Remove-Item "dist\*-x64.dll" -Force -ErrorAction SilentlyContinue
         }
     }
 
