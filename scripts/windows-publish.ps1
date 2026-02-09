@@ -222,10 +222,12 @@ function Main() {
         }
 
         # 显式查找并拷贝 opengl32sw.dll (如果 windeployqt 没带或者为了确保是 arm64)
-        $openglDll = Join-Path $targetQtDir "bin\opengl32sw.dll"
-        if (Test-Path $openglDll) {
-             Write-Host "Found opengl32sw.dll at $openglDll. Copying..."
-             Copy-Item $openglDll dist\
+        if (-not [string]::IsNullOrEmpty($targetQtDir)) {
+            $openglDll = Join-Path $targetQtDir "bin\opengl32sw.dll"
+            if (Test-Path $openglDll) {
+                 Write-Host "Found opengl32sw.dll at $openglDll. Copying..."
+                 Copy-Item $openglDll dist\
+            }
         }
 
     } else {
