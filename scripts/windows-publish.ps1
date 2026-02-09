@@ -112,9 +112,17 @@ function Main() {
             }
             
             # 策略3: 其他带子目录的 (通常是 QML) -> target/qml
-            # dist\QtQuick\Controls\qtquickcontrols2plugin.dll -> qml\QtQuick\Controls\qtquickcontrols2plugin.dll
             elseif ($relPath.Contains("\")) {
-                 $candidate = Join-Path $targetQtDir "qml\$relPath"
+                 # 如果 windeployqt 生成的目录结构已经是 qml\ 开头 (例如 dist\qml\QtQuick\...)
+                 # 那么直接在 targetQtDir 下找对应路径 (target\qml\QtQuick\...)
+                 if ($relPath.StartsWith("qml\")) {
+                     $candidate = Join-Path $targetQtDir $relPath
+                 } else {
+                     # 否则假设 windeployqt 把模块放在了根目录 (dist\QtQuick\...)
+                     # 我们需要到 target 的 qml 目录找 (target\qml\QtQuick\...)
+                     $candidate = Join-Path $targetQtDir "qml\$relPath"
+                 }
+
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
 
