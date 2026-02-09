@@ -62,7 +62,9 @@ int main(int argc, char *argv[]) {
     SettingsHelper::getInstance()->init(argv);
     Log::setup(argv, uri);
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#  ifndef _M_ARM64
     QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+#  endif
 #endif
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
