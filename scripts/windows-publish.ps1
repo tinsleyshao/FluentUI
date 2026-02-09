@@ -100,16 +100,26 @@ function Main() {
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
             # 策略2: Plugins -> target/plugins
-            elseif ($relPath.StartsWith("plugins")) {
-                 $subPath = $relPath.Substring(7) # Remove 'plugins' prefix (keep slash processing to Join-Path)
-                 # Join-Path might handle leading slash, but safer to trim
-                 $subPath = $subPath.TrimStart("\").TrimStart("/")
-                 $candidate = Join-Path $targetQtDir "plugins\$subPath"
-                 if (Test-Path $candidate) { $targetFile = $candidate }
+            elseif ($file.FullName.Contains("\plugins\")) {
+                 # 提取 plugins 之后的路径
+                 # dist\plugins\imageformats\qjpeg.dll -> imageformats\qjpeg.dll
+                 $index = $relPath.IndexOf("plugins\")
+                 if ($index -ge 0) {
+                    $subPath = $relPath.Substring($index + 8)
+                    $candidate = Join-Path $targetQtDir "plugins\$subPath"
+                    if (Test-Path $candidate) { $targetFile = $candidate }
+                 }
             }
             
-            # 策略3 (兜底): 如果是个 Qt DLL 但还没找到，尝试直接在 bin 下找
-            if ($null -eq $targetFile -and $file.Name.StartsWith("Qt")) {
+            # 策略3: 其他带子目录的 (通常是 QML) -> target/qml
+            # dist\QtQuick\Controls\qtquickcontrols2plugin.dll -> qml\QtQuick\Controls\qtquickcontrols2plugin.dll
+            elseif ($relPath.Contains("\")) {
+                 $candidate = Join-Path $targetQtDir "qml\$relPath"
+                 if (Test-Path $candidate) { $targetFile = $candidate }
+            }
+
+            # 策略4: 尝试在 bin 下寻找 (解决 D3DCompiler 等)
+            if ($null -eq $targetFile) {
                  $candidate = Join-Path $targetQtDir "bin\$($file.Name)"
                  if (Test-Path $candidate) { $targetFile = $candidate }
             }
@@ -142,14 +152,15 @@ function Main() {
             Get-ChildItem -Path dist -Filter "*.dll" -Recurse | ForEach-Object {
                 $arch = Get-FileArch $_.FullName
                 if ($arch -eq "x64" -or $arch -eq "x86") {
-                     Write-Host "ERROR: File $($_.Name) is $arch (Expected ARM64)" -ForegroundColor Red
+                     Write-Host "ERROR: File $($_.Name) is $arch (Expected ARM64) - DELETING" -ForegroundColor Red
+                     Remove-Item $_.FullName -Force
                      $hasError = $true
                 } else {
                      Write-Host "OK: $($_.Name) is $arch" -ForegroundColor Green
                 }
             }
             if ($hasError) {
-                Write-Warning "Some DLLs have incorrect architecture! The application may not start."
+                Write-Warning "Cleaned up incorrect architecture files. Please verify if application can run."
             }
         }
     }
