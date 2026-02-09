@@ -78,7 +78,8 @@ function Main() {
 
     # 运行 windeployqt (可能拷贝错误的架构，稍后覆盖)
     # 注意: 不使用 --compiler-runtime 因为我们后面会手动处理 VC 运行时
-    & $windeployqt --qmldir . --plugindir dist\plugins --no-translations --no-opengl-sw dist\$targetName
+    # 移除 --no-opengl-sw 以便让 OpenGL 程序有软解库可用 (随后会被覆盖为 arm64 版本)
+    & $windeployqt --qmldir . --plugindir dist\plugins --no-translations dist\$targetName
     
     # 核心步骤: 如果指定了 targetQtDir，遍历 dist 目录下的所有 DLL，
     # 并尝试从 targetQtDir 对应的位置找到同名文件进行覆盖。
@@ -196,15 +197,37 @@ function Main() {
     if (-not [string]::IsNullOrEmpty($winSdkDir) -and -not [string]::IsNullOrEmpty($winSdkVer)) {
         $sdkPath = Join-Path $winSdkDir "Redist"
         $sdkPath = Join-Path $sdkPath $winSdkVer
-        $sdkPath = Join-Path $sdkPath "ucrt\DLLs"
-        $sdkPath = Join-Path $sdkPath $msvcArch
+        $ucrtPath = Join-Path $sdkPath "ucrt\DLLs"
+        $ucrtPath = Join-Path $ucrtPath $msvcArch
         
-        if (Test-Path $sdkPath) {
-            Write-Host "Copying SDK Redist from $sdkPath"
-            Copy-Item "$sdkPath\*.dll" dist\
+        if (Test-Path $ucrtPath) {
+            Write-Host "Copying SDK UCRT Redist from $ucrtPath"
+            Copy-Item "$ucrtPath\*.dll" dist\
         } else {
-            Write-Host "Warning: SDK Redist path not found: $sdkPath"
+            Write-Host "Warning: SDK UCRT Redist path not found: $ucrtPath"
         }
+        
+        # 显式查找并拷贝 D3Dcompiler_47.dll
+        # 通常位置: C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\arm64\d3dcompiler_47.dll
+        $d3dPath = Join-Path $winSdkDir "bin"
+        $d3dPath = Join-Path $d3dPath $winSdkVer
+        $d3dPath = Join-Path $d3dPath $msvcArch
+        $d3dDll = Join-Path $d3dPath "d3dcompiler_47.dll"
+        
+        if (Test-Path $d3dDll) {
+            Write-Host "Found D3DCompiler at $d3dDll. Copying..."
+            Copy-Item $d3dDll dist\
+        } else {
+             Write-Host "Warning: D3DCompiler not found at $d3dDll"
+        }
+
+        # 显式查找并拷贝 opengl32sw.dll (如果 windeployqt 没带或者为了确保是 arm64)
+        $openglDll = Join-Path $targetQtDir "bin\opengl32sw.dll"
+        if (Test-Path $openglDll) {
+             Write-Host "Found opengl32sw.dll at $openglDll. Copying..."
+             Copy-Item $openglDll dist\
+        }
+
     } else {
         Write-Host "Warning: WinSDK environment variables missing."
     }
