@@ -15,8 +15,9 @@ FluObject{
     FluPaneItem{
         title:qsTr("About")
         icon:FluentIcons.Contact
-        onTapListener:function(){
-            FluRouter.navigate("/about")
+        url:"qrc:/example/qml/page/T_About.qml"
+        onTap:{
+            navigationView.push(url)
         }
     }
 
@@ -30,13 +31,4 @@ FluObject{
         }
     }
 
-    FluPaneItem{
-        title:qsTr("FluentUI Pro")
-        menuDelegate: paneItemMenu
-        icon: FluentIcons.Airplane
-        url:"qrc:/example/qml/page/T_FluentPro.qml"
-        onTap:{
-            navigationView.push(url)
-        }
-    }
 }

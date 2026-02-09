@@ -31,21 +31,6 @@ FluWindow {
         id:fluent_Initializr
     }
 
-    FluEvent{
-        name: "checkUpdate"
-        onTriggered: {
-            checkUpdate(false)
-        }
-    }
-
-    onLazyLoad: {
-        tour.open()
-    }
-
-    Component.onCompleted: {
-        checkUpdate(true)
-    }
-
     Component.onDestruction: {
         FluRouter.exit()
     }
@@ -209,16 +194,6 @@ FluWindow {
                         clickCount = 0
                     }
                 }
-                autoSuggestBox:FluAutoSuggestBox{
-                    iconSource: FluentIcons.Search
-                    items: ItemsOriginal.getSearchData()
-                    placeholderText: qsTr("Search")
-                    filter: (item) => item[textRole].toLowerCase().includes(text.toLowerCase())
-                    onItemClicked:
-                        (data)=>{
-                            ItemsOriginal.startPageByItem(data)
-                        }
-                }
                 Component.onCompleted: {
                     ItemsOriginal.navigationView = nav_view
                     ItemsOriginal.paneItemMenu = nav_item_right_menu
@@ -292,84 +267,8 @@ FluWindow {
         }
     }
 
-    Shortcut {
-        sequence: "F6"
-        context: Qt.WindowShortcut
-        onActivated: {
-            tour.open()
-        }
-    }
-
-    FluTour{
-        id: tour
-        finishText: qsTr("Finish")
-        nextText: qsTr("Next")
-        previousText: qsTr("Previous")
-        steps:{
-            var data = []
-            if(!window.useSystemAppBar){
-                data.push({title:qsTr("Dark Mode"),description: qsTr("Here you can switch to night mode."),target:()=>appBar.buttonDark})
-            }
-            data.push({title:qsTr("Hide Easter eggs"),description: qsTr("Try a few more clicks!!"),target:()=>nav_view.imageLogo})
-            return data
-        }
-    }
-
     FpsItem{
         id:fps_item
     }
 
-    FluContentDialog{
-        property string newVerson
-        property string body
-        id: dialog_update
-        title: qsTr("Upgrade Tips")
-        message:qsTr("FluentUI is currently up to date ")+ newVerson +qsTr(" -- The current app version") +AppInfo.version+qsTr(" \nNow go and download the new version？\n\nUpdated content: \n")+body
-        buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-        negativeText: qsTr("Cancel")
-        positiveText: qsTr("OK")
-        onPositiveClicked:{
-            Qt.openUrlExternally("https://github.com/zhuzichu520/FluentUI/releases/latest")
-        }
-    }
-
-    NetworkCallable{
-        id:callable
-        property bool silent: true
-        onStart: {
-            console.debug("start check update...")
-        }
-        onFinish: {
-            console.debug("check update finish")
-            FluEventBus.post("checkUpdateFinish");
-        }
-        onSuccess:
-            (result)=>{
-                var data = JSON.parse(result)
-                console.debug("current version "+AppInfo.version)
-                console.debug("new version "+data.tag_name)
-                if(data.tag_name !== AppInfo.version){
-                    dialog_update.newVerson =  data.tag_name
-                    dialog_update.body = data.body
-                    dialog_update.open()
-                }else{
-                    if(!silent){
-                        showInfo(qsTr("The current version is already the latest"))
-                    }
-                }
-            }
-        onError:
-            (status,errorString)=>{
-                if(!silent){
-                    showError(qsTr("The network is abnormal"))
-                }
-                console.debug(status+";"+errorString)
-            }
-    }
-
-    function checkUpdate(silent){
-        callable.silent = silent
-        Network.get("https://api.github.com/repos/zhuzichu520/FluentUI/releases/latest")
-        .go(callable)
-    }
 }

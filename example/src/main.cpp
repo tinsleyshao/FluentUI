@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
 #endif
     QApplication::setOrganizationName("ZhuZiChu");
     QApplication::setOrganizationDomain("https://zhuzichu520.github.io");
-    QApplication::setApplicationName("FluentUI");
-    QApplication::setApplicationDisplayName("FluentUI Example");
+    QApplication::setApplicationName("电力变压器抗短路能力预警平台");
+    QApplication::setApplicationDisplayName("电力变压器抗短路能力预警平台");
     QApplication::setApplicationVersion(APPLICATION_VERSION);
     QApplication::setQuitOnLastWindowClosed(false);
     SettingsHelper::getInstance()->init(argv);

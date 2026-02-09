@@ -750,49 +750,6 @@
         <source>Try a few more clicks!!</source>
         <translation type="unfinished">再试几下！！</translation>
     </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="337"/>
-        <source>Upgrade Tips</source>
-        <translation type="unfinished">升级提示</translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source>FluentUI is currently up to date </source>
-        <translation type="unfinished">FluentUI 目前最新版本 </translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source> -- The current app version</source>
-        <translation type="unfinished"> -- 当前应用版本</translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source> 
-Now go and download the new version？
-
-Updated content: 
-</source>
-        <translation type="unfinished"> 
-现在去下载新版本？
-
-更新的内容: 
-</translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="341"/>
-        <source>OK</source>
-        <translation type="unfinished">确定</translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="368"/>
-        <source>The current version is already the latest</source>
-        <translation type="unfinished">当前版本已经是最新版本</translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="375"/>
-        <source>The network is abnormal</source>
-        <translation type="unfinished">网络异常</translation>
-    </message>
 </context>
 <context>
     <name>SingleInstanceWindow</name>
@@ -2462,11 +2419,6 @@ My only desire is to be permitted to drive out the traitors and restore the Han.
         <location filename="qml/page/T_Settings.qml" line="29"/>
         <source>Current Version</source>
         <translation type="unfinished">当前版本</translation>
-    </message>
-    <message>
-        <location filename="qml/page/T_Settings.qml" line="35"/>
-        <source>Check for Updates</source>
-        <translation type="unfinished">检查更新</translation>
     </message>
     <message>
         <location filename="qml/page/T_Settings.qml" line="51"/>

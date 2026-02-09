@@ -718,45 +718,6 @@
         <source>Try a few more clicks!!</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="337"/>
-        <source>Upgrade Tips</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source>FluentUI is currently up to date </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source> -- The current app version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="338"/>
-        <source> 
-Now go and download the new version？
-
-Updated content: 
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="341"/>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="368"/>
-        <source>The current version is already the latest</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/window/MainWindow.qml" line="375"/>
-        <source>The network is abnormal</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>SingleInstanceWindow</name>
@@ -2282,11 +2243,6 @@ My only desire is to be permitted to drive out the traitors and restore the Han.
     <message>
         <location filename="qml/page/T_Settings.qml" line="29"/>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/page/T_Settings.qml" line="35"/>
-        <source>Check for Updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -155,6 +155,7 @@
         <file>qml/page/T_Rectangle.qml</file>
         <file>qml/page/T_RemoteLoader.qml</file>
         <file>qml/page/T_Settings.qml</file>
+        <file>qml/page/T_About.qml</file>
         <file>qml/page/T_Slider.qml</file>
         <file>qml/page/T_StatusLayout.qml</file>
         <file>qml/page/T_TableView.qml</file>

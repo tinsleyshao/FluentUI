@@ -10,13 +10,6 @@ FluScrollablePage{
 
     title: qsTr("Settings")
 
-    FluEvent{
-        name: "checkUpdateFinish"
-        onTriggered: {
-            btn_checkupdate.loading = false
-        }
-    }
-
     FluFrame{
         Layout.fillWidth: true
         Layout.topMargin: 20
@@ -29,15 +22,6 @@ FluScrollablePage{
                 text: "%1 v%2".arg(qsTr("Current Version")).arg(AppInfo.version)
                 font: FluTextStyle.Body
                 anchors.verticalCenter: parent.verticalCenter
-            }
-            FluLoadingButton{
-                id: btn_checkupdate
-                text: qsTr("Check for Updates")
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: {
-                    loading = true
-                    FluEventBus.post("checkUpdate")
-                }
             }
         }
     }

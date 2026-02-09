@@ -1,48 +1,38 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
 import FluentUI 1.0
 import "../component"
 
-FluWindow {
+FluScrollablePage{
 
-    id:window
-    title:"关于"
-    width: 600
-    height: 600
-    fixSize: true
-    launchMode: FluWindowType.SingleTask
+    title: qsTr("About")
 
     Image{
         id: image_logo
-        anchors{
-            top: parent.top
-            topMargin: 20
-            horizontalCenter: parent.horizontalCenter
-        }
+        Layout.topMargin: 20
+        Layout.alignment: Qt.AlignHCenter
         width: 80
         height: 80
         source: "qrc:/example/res/image/favicon.ico"
     }
 
-    Flickable{
-        anchors{
-            top: image_logo.bottom
-            topMargin: 20
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            leftMargin: 20
-            rightMargin: 20
-            bottomMargin: 20
-        }
-        ScrollBar.vertical: FluScrollBar {}
-        contentWidth: text.width
-        contentHeight: text.height
-        clip: true
+    Item{
+        Layout.fillWidth: true
+        Layout.preferredHeight: text_content.height + 40
+        Layout.topMargin: 20
+        
         FluText{
-            id: text
+            id: text_content
+            anchors{
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                margins: 20
+            }
             textFormat: Text.MarkdownText
+            wrapMode: Text.WordWrap
             onLinkActivated:
                 (link)=> {
                     Qt.openUrlExternally(link)
