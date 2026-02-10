@@ -32,6 +32,15 @@ FluObject{
         }
     }
 
+    FluPaneItemSeparator{
+        spacing: 10
+        size: 1
+    }
+
+    FluPaneItemHeader{
+        title: qsTr("Monitoring")
+    }
+
     FluPaneItem{
         title: qsTr("Overview")
         menuDelegate: paneItemMenu
@@ -46,6 +55,15 @@ FluObject{
         icon: FluentIcons.Library
         url: "qrc:/example/qml/page/T_UI_AssetManagement.qml"
         onTap: { navigationView.push(url) }
+    }
+
+    FluPaneItemSeparator{
+        spacing: 10
+        size: 1
+    }
+
+    FluPaneItemHeader{
+        title: qsTr("Analysis Modules")
     }
 
     FluPaneItem{
@@ -70,6 +88,15 @@ FluObject{
         icon: FluentIcons.AllApps
         url: "qrc:/example/qml/page/T_UI_Module3_MultiParam.qml"
         onTap: { navigationView.push(url) }
+    }
+
+    FluPaneItemSeparator{
+        spacing: 10
+        size: 1
+    }
+
+    FluPaneItemHeader{
+        title: qsTr("Export")
     }
 
     FluPaneItem{
