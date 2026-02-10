@@ -9,11 +9,19 @@ FluTextStyle::FluTextStyle(QObject *parent) : QObject{parent} {
     QFont caption;
     caption.setFamily(_family);
     caption.setPixelSize(12);
+#if defined(Q_OS_WIN) && defined(Q_PROCESSOR_ARM_64)
+    // ARM64 Windows有字体渲染bug，Normal weight的中文可能不可见，使用Medium weight
+    caption.setWeight(QFont::Medium);
+#endif
     Caption(caption);
 
     QFont body;
     body.setFamily(_family);
     body.setPixelSize(13);
+#if defined(Q_OS_WIN) && defined(Q_PROCESSOR_ARM_64)
+    // ARM64 Windows有字体渲染bug，Normal weight的中文可能不可见，使用Medium weight
+    body.setWeight(QFont::Medium);
+#endif
     Body(body);
 
     QFont bodyStrong;
