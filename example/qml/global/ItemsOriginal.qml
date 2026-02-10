@@ -35,7 +35,7 @@ FluObject{
     FluPaneItem{
         title: qsTr("Overview")
         menuDelegate: paneItemMenu
-        icon: FluentIcons.LineChart
+        icon: FluentIcons.AreaChart
         url: "qrc:/example/qml/page/T_UI_Overview.qml"
         onTap: { navigationView.push(url) }
     }
@@ -43,7 +43,7 @@ FluObject{
     FluPaneItem{
         title: qsTr("Asset Management")
         menuDelegate: paneItemMenu
-        icon: FluentIcons.Database
+        icon: FluentIcons.Library
         url: "qrc:/example/qml/page/T_UI_AssetManagement.qml"
         onTap: { navigationView.push(url) }
     }
@@ -67,7 +67,7 @@ FluObject{
     FluPaneItem{
         title: qsTr("Multi-parameter Fusion")
         menuDelegate: paneItemMenu
-        icon: FluentIcons.Merge
+        icon: FluentIcons.AllApps
         url: "qrc:/example/qml/page/T_UI_Module3_MultiParam.qml"
         onTap: { navigationView.push(url) }
     }

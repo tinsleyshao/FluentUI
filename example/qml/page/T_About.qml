@@ -7,7 +7,7 @@ import "../component"
 
 FluScrollablePage{
 
-    title: qsTr("About")
+    title: qsTr("关于")
 
     Image{
         id: image_logo

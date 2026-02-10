@@ -12,7 +12,7 @@ import "../global"
 FluWindow {
 
     id:window
-    title: "FluentUI"
+    title: "电力变压器抗短路能力预警平台"
     width: 1000
     height: 668
     minimumWidth: 668
@@ -39,7 +39,7 @@ FluWindow {
         id:system_tray
         visible: true
         icon.source: "qrc:/example/res/image/favicon.ico"
-        tooltip: "FluentUI"
+        tooltip: "电力变压器抗短路能力预警平台"
         menu: Menu {
             MenuItem {
                 text: "退出"
@@ -75,7 +75,7 @@ FluWindow {
         negativeText: qsTr("Minimize")
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.NeutralButton | FluContentDialogType.PositiveButton
         onNegativeClicked: {
-            system_tray.showMessage(qsTr("Friendly Reminder"),qsTr("FluentUI is hidden from the tray, click on the tray to activate the window again"));
+            system_tray.showMessage(qsTr("温馨提示"),qsTr("程序已最小化到系统托盘，点击托盘图标可重新激活窗口"));
             timer_window_hide_delay.restart()
         }
         positiveText: qsTr("Quit")
@@ -184,7 +184,7 @@ FluWindow {
                 }
                 displayMode: GlobalModel.displayMode
                 logo: "qrc:/example/res/image/favicon.ico"
-                title:"FluentUI"
+                title:"电力变压器抗短路能力预警平台"
                 onLogoClicked:{
                     clickCount += 1
                     showSuccess("%1:%2".arg(qsTr("Click Time")).arg(clickCount))
