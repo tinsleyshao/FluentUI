@@ -84,12 +84,14 @@ FluObject{
         title: qsTr("PaneItemExpander Disabled")
         iconVisible: false
         disabled: true
+        visible: GlobalModel.showDemoPages
     }
 
     FluPaneItemExpander{
         id: item_expander_basic_input
         title: qsTr("Basic Input")
         icon: FluentIcons.CheckboxComposite
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             id: item_buttons
             count: 99
@@ -168,6 +170,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Form")
         icon: FluentIcons.GridView
+        visible: GlobalModel.showDemoPages
         FluPaneItem {
             title: qsTr("TextBox")
             menuDelegate: paneItemMenu
@@ -209,6 +212,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Surface")
         icon: FluentIcons.SurfaceHub
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("InfoBar")
             menuDelegate: paneItemMenu
@@ -275,6 +279,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Layout")
         icon: FluentIcons.DockLeft
+        visible: GlobalModel.showDemoPages
         FluPaneItem {
             title: qsTr("StaggeredLayout")
             menuDelegate: paneItemMenu
@@ -298,6 +303,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Popus")
         icon: FluentIcons.ButtonMenu
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("Dialog")
             menuDelegate: paneItemMenu
@@ -342,6 +348,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Navigation")
         icon: FluentIcons.AllApps
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("Pivot")
             menuDelegate: paneItemMenu
@@ -405,6 +412,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Theming")
         icon:FluentIcons.Brightness
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("Acrylic")
             menuDelegate: paneItemMenu
@@ -434,6 +442,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Chart")
         icon: FluentIcons.AreaChart
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("Bar Chart")
             menuDelegate: paneItemMenu
@@ -481,11 +490,13 @@ FluObject{
     FluPaneItemSeparator{
         spacing:10
         size:1
+        visible: GlobalModel.showDemoPages
     }
 
     FluPaneItemExpander{
         title: qsTr("Other")
         icon: FluentIcons.Shop
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             title: qsTr("OpenGL")
             menuDelegate: paneItemMenu
@@ -551,6 +562,7 @@ FluObject{
     FluPaneItemExpander{
         title: qsTr("Other")
         icon: FluentIcons.Shop
+        visible: GlobalModel.showDemoPages
         FluPaneItem{
             id: item_other
             title: qsTr("Remote Loader")

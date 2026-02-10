@@ -57,6 +57,21 @@ FluScrollablePage{
         }
     }
 
+    FluFrame{
+        Layout.fillWidth: true
+        Layout.topMargin: 20
+        height: 50
+        padding: 10
+        FluCheckBox{
+            text: qsTr("Show Demo Pages")
+            checked: GlobalModel.showDemoPages
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: {
+                GlobalModel.showDemoPages = !GlobalModel.showDemoPages
+            }
+        }
+    }
+
     FluContentDialog{
         id: dialog_restart
         title: qsTr("Friendly Reminder")

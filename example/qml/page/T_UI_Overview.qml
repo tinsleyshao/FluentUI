@@ -13,34 +13,25 @@ FluScrollablePage{
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/example/res/image/bg_overview_header.png"
         asynchronous: true
-        z: -1
     }
 
-    ColumnLayout{
-        anchors.fill: parent
-        spacing: 12
-        Layout.margins: 16
-
-        Item{
-            Layout.fillWidth: true
-            Layout.preferredHeight: 260
-            Rectangle{
-                anchors.fill: parent
-                gradient: Gradient{
-                    GradientStop { position: 0.8; color: FluTheme.dark ? Qt.rgba(0,0,0,0) : Qt.rgba(1,1,1,0) }
-                    GradientStop { position: 1.0; color: FluTheme.dark ? Qt.rgba(0,0,0,1) : Qt.rgba(1,1,1,1) }
-                }
-            }
-            FluText{
-                text: qsTr("Overview")
-                font: FluTextStyle.TitleLarge
-                anchors{
-                    top: parent.top
-                    left: parent.left
-                    topMargin: 20
-                    leftMargin: 20
-                }
-            }
+    FluAcrylic{
+        target: bg
+        width: parent.width - 80
+        height: 120
+        anchors{
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+            topMargin: 40
+        }
+        radius: 8
+        
+        FluText{
+            text: qsTr("Welcome to Transformer Warning System")
+            font: FluTextStyle.TitleLarge
+            color: FluTheme.dark ? Qt.rgba(1,1,1,0.9) : Qt.rgba(0,0,0,0.9)
+            anchors.centerIn: parent
+            font.weight: Font.DemiBold
         }
     }
 }
