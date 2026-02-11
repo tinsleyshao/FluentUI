@@ -22,6 +22,9 @@ Item {
     property int cellHeight: 38
     property int cellWidth: 300
     property bool hideNavAppBar: false
+    property var paneBackgroundColor: undefined
+    property var paneBorderColor: undefined
+    property bool paneShadowVisible: true
     property alias buttonMenu: btn_menu
     property alias buttonBack: btn_back
     property alias imageLogo: image_logo
@@ -912,16 +915,21 @@ Item {
             topMargin: control.navTopMargin
             bottom: parent.bottom
         }
-        border.color: FluTheme.dark ? Qt.rgba(45/255,45/255,45/255,1) : Qt.rgba(226/255,230/255,234/255,1)
+        border.color: paneBorderColor !== undefined
+            ? paneBorderColor
+            : (FluTheme.dark ? Qt.rgba(45/255,45/255,45/255,1) : Qt.rgba(226/255,230/255,234/255,1))
         border.width:  d.isMinimal || d.isCompactAndPanel ? 1 : 0
         color: {
+            if(paneBackgroundColor !== undefined){
+                return paneBackgroundColor
+            }
             if(d.isMinimal || d.enableNavigationPanel){
                 return FluTheme.dark ? Qt.rgba(61/255,61/255,61/255,1) : Qt.rgba(243/255,243/255,243/255,1)
             }
             return "transparent"
         }
         FluShadow{
-            visible: d.isMinimal || d.isCompactAndPanel
+            visible: paneShadowVisible && (d.isMinimal || d.isCompactAndPanel)
             radius: 0
         }
         x: visible ? 0 : -width
